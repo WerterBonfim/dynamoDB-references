@@ -34,6 +34,16 @@
 
 # ------------------------------- VARIÁVEIS ------------------------------ #
 
+urlDynamoDB="http://localhost:7000"
+
+menuInterativo="
+    $(basename "$0") - [OPÇÕES]
+
+    -h - menu de ajuda
+    --listar-tabelas - lista as tabelas
+    --criar-tabela [nome da tabela] - cria uma tabela
+"
+
 # ------------------------------------------------------------------------ #
 
 # ------------------------------- FUNÇÕES ----------------------------------------- #
@@ -49,6 +59,12 @@ function criarTabela() {
         --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
 }
 
+function listarTabelas() {
+
+    aws dynamodb list-tables --endpoint-url "$urlDynamoDB"
+
+}
+
 # --------------------------------------------------------------------------------- #
 
 # ------------------------------- EXECUÇÃO ----------------------------------------- #
@@ -61,5 +77,25 @@ set -euo pipefail
     echo "Necessito do AWS CLI para continuar"
 }
 
+[ -z "${1-}" ] && {
+    echo "Comando inválido"
+    echo "$menuInterativo"
+    exit 0
+}
 
-criarTabela
+case "$1" in
+-h)
+    echo "$menuInterativo" && exit 0
+    ;;
+--listar-tabelas)
+
+    listarTabelas && exit 0
+    ;;
+
+--criar-tabela)
+    criar-tabela && exit 0
+    ;;
+*)
+    echo "Opção inválida, valie o -h" && exit 1
+    ;;
+esac
