@@ -1,0 +1,18 @@
+version: '3.8'
+services: 
+    dynamodb-local:
+        # -sharedDb: cria um unico arquivo de banco de dados: shared-local-instace.db
+        # -optimizeDbBeforeStartup: precisa passar o dbPath para do Dynamo encontrar o arquivo de banco de dados
+        command: "-jar DynamoDBLocal.jar -sharedDb -optimizeDbBeforeStartup -dbPath ./data"
+        image: "amazon/dynamodb-local"
+        container_name: dynamodb-local
+        ports: 
+            - "7000:8000"
+        volumes: 
+            - "./docker/dynamodb:/home/dynamodblocal/data"
+        working_dir: /home/dynamodblocal
+        user: root
+        environment:
+            AWS_ACCESS_KEY_ID: 'fakeMyAccessKey'
+            AWS_SECRET_ACCESS_KEY: 'fakeSecretAccessKey'
+            REGION: 'ap-southeast-2'

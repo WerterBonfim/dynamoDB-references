@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.DynamoDBv2;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,6 +32,9 @@ namespace Werter.DynamoDb.WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Werter.DynamoDb.WebApi", Version = "v1"});
             });
+
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions("AWS"));
+            services.AddAWSService<IAmazonDynamoDB>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
