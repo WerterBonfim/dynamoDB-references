@@ -27,7 +27,7 @@ namespace Werter.DynamoDbApp
 
         public async Task ExecutarExemplos()
         {
-            // await CriarTabela();
+            await CriarTabela();
             //await ListarTabelas();
             // await VerificaSeTabelaExiste(NomeDaTabela);
             await AdicionarUmProduto();

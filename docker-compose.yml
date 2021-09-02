@@ -9,10 +9,14 @@ services:
         ports: 
             - "7000:8000"
         volumes: 
-            - "./docker/dynamodb:/home/dynamodblocal/data"
+            - "dynamodb-data:/home/dynamodblocal/data"
         working_dir: /home/dynamodblocal
         user: root
         environment:
             AWS_ACCESS_KEY_ID: 'fakeMyAccessKey'
             AWS_SECRET_ACCESS_KEY: 'fakeSecretAccessKey'
             REGION: 'ap-southeast-2'
+
+volumes: 
+    dynamodb-data:
+
