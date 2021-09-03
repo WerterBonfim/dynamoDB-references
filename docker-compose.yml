@@ -16,6 +16,8 @@ services:
             AWS_ACCESS_KEY_ID: 'fakeMyAccessKey'
             AWS_SECRET_ACCESS_KEY: 'fakeSecretAccessKey'
             REGION: 'ap-southeast-2'
+        stdin_open: true
+        tty: true
 
 volumes: 
     dynamodb-data:
