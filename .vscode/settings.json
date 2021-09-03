@@ -3,7 +3,7 @@
     "files.exclude": {        
         ".vscode": true,
         ".gitignore": true,
-        "em-dotnet": true
+        "em-dotnet/Werter.DynamoDbApp": true
         
     }
 }

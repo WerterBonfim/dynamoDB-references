@@ -2,27 +2,38 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Amazon;
 using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Runtime;
 using Amazon.Util;
+using ConsoleTables;
 
 namespace Werter.DynamoDbApp
 {
     public class Rascunho
     {
         private readonly AmazonDynamoDBClient _client;
+        private readonly IDynamoDBContext _context;
+
+        private readonly AWSCredentials _credenciais =
+            new BasicAWSCredentials("fakeMyAccessKey", "fakeSecretAccessKey");
+
+        private readonly AmazonDynamoDBConfig _config = new()
+        {
+            ServiceURL = "http://localhost:7000",
+            AuthenticationRegion = "ap-southeast-1"
+        };
+
         public string NomeDaTabela { get; } = "ProdutosDotnet";
 
         public Rascunho()
         {
-            _client = new AmazonDynamoDBClient(
-                new BasicAWSCredentials("fakeMyAccessKey", "fakeSecretAccessKey"),
-                //new AnonymousAWSCredentials(),
-                new AmazonDynamoDBConfig
-                {
-                    ServiceURL = "http://localhost:7000",
-                });
+            _client = new AmazonDynamoDBClient(_credenciais, _config);
+            _context = new DynamoDBContext(_client);
+            
+            
         }
 
         public async Task ExecutarExemplos()
@@ -30,10 +41,11 @@ namespace Werter.DynamoDbApp
             await CriarTabela();
             //await ListarTabelas();
             // await VerificaSeTabelaExiste(NomeDaTabela);
-            await AdicionarUmProduto();
-
-
+            //await AdicionarUmProduto();
             //await ExtrairInformacoes();
+
+            await AdicionarProdutoViaContexto();
+            await ListarOsProdutos();
         }
 
         public async Task ListarTabelas()
@@ -77,10 +89,22 @@ namespace Werter.DynamoDbApp
             VerificaSeOcorreuAlgumErro(resposta);
         }
 
+        public async Task AdicionarProdutoViaContexto()
+        {
+            var alicate = new Produto { Nome = "Alicate", Tipo = "Ferramenta" };
+            await _context.SaveAsync(alicate);
+        }
+
 
         public async Task ListarOsProdutos()
         {
-            //var resposta = await _client.ScanAsync(NomeDaTabela, )
+            var resposta = await _client.ScanAsync(NomeDaTabela, new List<string>());
+            VerificaSeOcorreuAlgumErro(resposta);
+
+            var produtos = await _context.ScanAsync<Produto>(null)
+                .GetRemainingAsync();
+
+            ConsoleTable.From(produtos).Write();
         }
 
         private CreateTableRequest MontarRequisicaoParaCriarTabela()

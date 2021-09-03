@@ -10,7 +10,7 @@ namespace Werter.DynamoDb.WebApi.Configuration
         public static void RegisterService(this IServiceCollection services)
         {
             services.AddSingleton<IDynamoDBContext, DynamoDBContext>();
-            services.AddScoped<ClienteRepository>();
+            services.AddScoped<ProdutoRepository>();
         }
     }
 }

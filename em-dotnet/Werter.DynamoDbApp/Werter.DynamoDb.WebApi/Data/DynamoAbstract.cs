@@ -25,10 +25,13 @@ namespace Werter.DynamoDb.WebApi.Data
             return await _context.QueryAsync<T>(hashKey).GetRemainingAsync();
         }
 
+        // protected async Task Atualizar(int id, T obj)
+        // {
+        //     await _context.CreateBatchWrite<T>();
+        // }
+
         public async Task Save(T obj)
         {
-            
-            
             await _context.SaveAsync<T>(obj);
         }
     }
